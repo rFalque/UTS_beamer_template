@@ -8,3 +8,8 @@ sudo apt-get install python3-pygments
 ```
 
 ## Playing videos
+Open the presentation with
+
+```bash
+pdfpc main.pdf
+```
