@@ -1,0 +1,173 @@
+% !TeX document-id = {2fa47047-5258-46cc-82b6-1018c6ae19b3}
+\documentclass[8pt, table, aspectratio=169]{beamer}
+\usetheme{Warsaw}
+%\usecolortheme{lily}
+
+% !TeX TXS-program:compile = txs:///pdflatex/[--shell-escape]
+
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{animate}
+\usepackage{graphicx}
+\usepackage{epsfig,epstopdf}
+\usepackage{verbatim}
+\usepackage{subfig}
+\usepackage{textpos}
+\usepackage{beamertexpower}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{bm}
+\usepackage{etoolbox}
+\usepackage{caption}
+\usepackage{natbib}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{mathtools}
+\usepackage{minted}
+\usepackage{multimedia}
+
+\usetikzlibrary{calc,shapes}
+\usetikzlibrary{arrows,shapes}
+\usetikzlibrary{calc,3d}
+
+% for the code snippets
+
+\usepackage{scrextend}
+
+\input{template.tex}
+
+\begin{document}
+\pgfplotsset{compat=1.14}
+%\tikzstyle{every picture}+=[remember picture,overlay]
+%\tikzstyle{every picture}+=[remember picture]
+
+\section{Introduction slide}
+% Introduction slide
+{
+	\setbeamertemplate{footline}{} 
+	\setbeamertemplate{background} 
+	{
+		\includegraphics[width=\paperwidth,height=\paperheight]{figures/background_first_slide.jpg}
+	}
+	\begin{frame}
+		\begin{tikzpicture}[overlay, remember picture]
+			\node[anchor=west, text=white, font=\Huge\bfseries] at (1.5,1.9) {Robotics Institute};
+			\node[anchor=west, text=white, font=\huge\bfseries] at (0.0,0) {Course};
+			\node[anchor=west, text=white, font=\huge\bfseries] at (0.0,-1) {Title};
+			\node[anchor=west, text=white, font=\huge\bfseries] at (0.0,-2) {Author};
+		\end{tikzpicture}
+	\end{frame}
+}
+
+\section{Introduction}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CNN introduction
+\begin{frame}{CNNs: inspiration}
+	\begin{columns}[T] % align columns
+		\begin{column}{.5\textwidth}
+			Cat's visual cortex is made of neurons [{\color{blue}\href{http://onlinelibrary.wiley.com/doi/10.1113/jphysiol.1962.sp006837/pdf}{Hubel 1962}}]:
+			\begin{figure}
+				\centering
+				\includegraphics[width=0.65\linewidth]{figures/cat_visual_cortex_neurons.png}
+			\end{figure}
+		\end{column}%
+		%\hfill%
+		\begin{column}{.35\textwidth}
+			Convoluted Neural Networks (CNNs)
+			{\color{blue}\rule{\linewidth}{4pt}}
+			What is it?
+			\begin{itemize}
+				\item[$\bullet$] Supervised algorithm
+				\item[]
+				\item[$\bullet$] Based on Neural Networks
+				\item[]
+				\item[$\bullet$] Embed the feature engineering
+				\item[]
+			\end{itemize}
+			Replace some of the hidden layers by
+			\begin{itemize}
+				\item[$\bullet$] Convolution layers
+				\item[$\bullet$] Max pooling layers
+				\item[$\bullet$] ReLU layers
+				\item[$\bullet$] Fully-connected layers
+			\end{itemize}
+		\end{column}%
+	\end{columns}
+	
+\end{frame}
+
+\section{Convolutional Neural Networks}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{CNNs: layers = convolution}
+	Convolution in image processing:
+    \begin{figure}
+		\centering
+		\animategraphics[loop,controls,autoplay,width=0.6\linewidth]{1}{figures/conv/convolution-}{0}{8}
+	\end{figure}
+\end{frame}
+
+
+
+
+\begin{frame}{CNNs: VGG breakdown}
+	VGG architecture:
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.8\linewidth]{figures/VGG.png}
+	\end{figure}
+	See the breakdown from {\color{blue}\href{http://cs231n.github.io/convolutional-networks/\#conv}{Stanford course}}.
+	
+	\customfootertext{\href{https://arxiv.org/pdf/1409.1556}{\emph{``Very Deep Convolutional Networks for Large-Scale Image Recognition''}, ICLR 2015}}
+\end{frame}
+
+\begin{frame}[fragile]{CNNs: implementation}
+	How do you code this within Pytorch?
+	\begin{exampleblock}{Python}
+		\begin{overprint}
+			\begin{minted}[highlightlines={4,5,11,13},fontsize=\footnotesize]{python}
+class CNN(nn.Module):
+	def __init__(self):
+		super(CNN, self).__init__()
+		self.conv1 = nn.Conv2d(1, 16, 3, 1)
+		self.conv2 = nn.Conv2d(16, 32, 3, 1)
+		self.fc1 = nn.Linear(32 * 5 * 5, 128)
+		self.fc2 = nn.Linear(128, 10)
+
+	def forward(self, x):
+		# feature encoder
+		x = F.relu(self.conv1(x))   # Layer 1
+		x = F.max_pool2d(x, 2, 2)
+		x = F.relu(self.conv2(x))   # Layer 2
+		x = F.max_pool2d(x, 2, 2)
+		
+		# classifier
+		x = x.view(-1, 32 * 5 * 5)
+		x = F.relu(self.fc1(x))     # Fully connected layer
+		x = self.fc2(x)
+		return x
+		\end{minted}
+		\end{overprint}
+	\end{exampleblock}
+\end{frame}
+
+
+\begin{frame}{movie}
+	\begin{figure}[h!]
+		\centering    
+		\movie[label=show3,width=0.7\textwidth,poster
+		,autostart,showcontrols,loop] 
+		{\includegraphics[width=0.7\textwidth]{figures/image26.png}}{media/media25.avi}
+		\caption{caption}
+	\end{figure} 
+\end{frame}
+
+
+\end{document}
+
+
+
+
+

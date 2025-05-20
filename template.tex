@@ -1,0 +1,77 @@
+\addtokomafont{labelinglabel}{\sffamily}
+\definecolor{grey}{rgb}{0.8,0.8,0.8}
+\definecolor{lightgrey}{rgb}{0.9,0.9,0.9}
+\usetikzlibrary{arrows,shapes}
+
+\definecolor{CASgray}{RGB}{176,174,175}
+\definecolor{CASblue}{RGB}{50,70,123}
+\definecolor{CASred}{RGB}{227,33,36}
+\definecolor{CASgreen}{RGB}{153,153,102}
+\definecolor{CASblack}{RGB}{35,31,32}
+\definecolor{CASbackground}{RGB}{250,250,250}
+
+\setbeamercolor{block title}{bg=CASblue,fg=white}
+\setbeamercolor{block title alerted}{bg=CASred,fg=white}
+\setbeamercolor{block title example}{bg=CASgreen,fg=white}
+
+\usefonttheme{professionalfonts}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize items}[triangle]
+\setbeamertemplate{enumerate items}[default]
+
+\setbeamercolor{item projected}{bg=CASblack}
+\usesubitemizeitemtemplate{%
+	\tiny\raise1.5pt\hbox{\color{CASblack}$\blacktriangleright$}%
+}
+
+% Remove the default footer content
+\setbeamertemplate{footline}{}
+
+% Remove the default header content
+\setbeamertemplate{headline}{}
+
+% Set frametitle text to black and remove both the background and gradient
+\setbeamercolor{frametitle}{fg=black, bg=}  % Set background to white for transparency
+\setbeamerfont{frametitle}{size=\Large} 
+
+% Optionally, you can remove the border as well
+\setbeamertemplate{frametitle}[default][left]  % Reset any custom frametitle templates
+
+
+% Remove the blue band by setting the header background to transparent
+\setbeamercolor{headline}{bg=}
+
+% Set text color to black
+\setbeamercolor{normal text}{fg=black}
+
+\addtobeamertemplate{background}{
+	\begin{tikzpicture}[overlay, remember picture]
+		
+		% Logo in top-right
+		\node[anchor=north east, xshift=-0.5cm, yshift=-0.5cm] at (current page.north east) {
+			\includegraphics[height=1cm]{figures/UTS_logo.png}
+		};
+		
+		% Transparent black footer rectangle
+		\fill[black, opacity=0.20] 
+		(current page.south west) rectangle 
+		([yshift=0.7cm]current page.south east);
+		
+		% Bottom-left "UTS" text
+		\node[anchor=south west, xshift=0.5cm, yshift=0.1cm, text=white, font=\bfseries\Large]
+		at (current page.south west) {UTS};
+		
+		% Bottom-right slide number
+		\node[anchor=south east, xshift=-0.5cm, yshift=0.1cm, text=white, font=\bfseries\Large]
+		at (current page.south east) {\insertframenumber{}};
+	\end{tikzpicture}
+}{}
+
+% Define your white footer text command
+\newcommand{\customfootertext}[1]{%
+	\begin{tikzpicture}[overlay, remember picture]
+		\node[anchor=south west, xshift=1.5cm, yshift=0.025cm, text=white, font=\bfseries]
+		at (current page.south west) {{\Large$|$} #1};
+	\end{tikzpicture}%
+}
